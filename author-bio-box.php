@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Author Bio Box
-Plugin URI: http://wordpress.org/extend/plugins/author-bio-box/
+Plugin URI: http://www.ferramentasblog.com/2011/09/power-comment-validacao-de-comentarios.html
 Description: Exiba um box com a biografia do autor dos posts e também links de redes sociais.
 Author: Claudio Sanches
 Version: 1.0
@@ -296,5 +296,5 @@ function authorbbio_add_box($content) {
         return $content;
     }
 }
-add_filter('the_content', 'authorbbio_add_box');
+add_filter('the_content', 'authorbbio_add_box', 1300);
 ?>
