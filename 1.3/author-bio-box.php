@@ -4,7 +4,7 @@ Plugin Name: Author Bio Box
 Plugin URI: http://www.ferramentasblog.com/2011/09/power-comment-validacao-de-comentarios.html
 Description: Exiba um box com a biografia do autor dos posts e também links de redes sociais.
 Author: Claudio Sanches
-Version: 1.2
+Version: 1.3
 Author URI: http://www.claudiosmweb.com/
 */
 
@@ -20,6 +20,7 @@ function set_authorbbox_options() {
     add_option('authorbbox_bwidth','2');
     add_option('authorbbox_bstyle','Solida');
     add_option('authorbbox_bcolor','#cccccc');
+    add_option('authorbbox_show','posts');
 }
 // Deleta opcoes quando o plugin &eacute; desinstalado
 function unset_authorbbox_options() {
@@ -28,6 +29,7 @@ function unset_authorbbox_options() {
     delete_option('authorbbox_bwidth');
     delete_option('authorbbox_bstyle');
     delete_option('authorbbox_bcolor');
+    delete_option('authorbbox_show');
 }
 // instrucoes ao instalar ou desistalar o plugin
 register_activation_hook(__FILE__,'set_authorbbox_options');
@@ -76,6 +78,11 @@ function update_authorbbox_options() {
         update_option('authorbbox_bcolor', $_REQUEST['authorbbox_bcolor']);
         $correto = true;
     }
+    // Onde mostrar
+    if ($_REQUEST['authorbbox_show']) {
+        update_option('authorbbox_show', $_REQUEST['authorbbox_show']);
+        $correto = true;
+    }
     if ($correto) {
         ?><div id="message" class="updated fade">
         <p><?php _e('Op&ccedil;&otilde;es salvas.'); ?></p>
@@ -96,6 +103,7 @@ function print_authorbbox_form() {
     $default_bstyle = get_option('authorbbox_bstyle');
     $default_bstyle_options = array('Sem borda','Solida','Pontilhada','Tracejada');
     $default_bcolor = get_option('authorbbox_bcolor');
+    $default_show = get_option('authorbbox_show');
     $authorbbox_plugin_dir = get_bloginfo('wpurl') . '/wp-content/plugins/author-bio-box/';
     ?>
     <form action="" method="post">
@@ -152,6 +160,14 @@ function print_authorbbox_form() {
                 <div id="ilctabscolorpicker_abb_border"></div>
             </td>
         </tr>
+        <tr>
+            <th scope="row"><label for="authorbbox_show_op1"><?php _e('Mostrar plugin em'); ?></label></th>
+            <td>
+                <label><input type="radio" id="authorbbox_show_op1" name="authorbbox_show" value="posts" <?php if ($default_show == "posts") { _e('checked="checked"'); } ?> /> <?php _e('Apenas dentro dos Posts'); ?></label>
+                <label><input style="margin:0 0 0 10px" type="radio" id="authorbbox_show_op2" name="authorbbox_show" value="home" <?php if ($default_show == "home") { _e('checked="checked"'); } ?>/> <?php _e('Na p&aacute;gina inicial e posts'); ?></label>
+            </td>
+            </td>
+        </tr>
     </table>
     <p class="submit">
         <input type="submit" class="button-primary" name="submit" value="salvar" />
@@ -179,7 +195,7 @@ function authorbbox_css_head() {
     $uthorbbox_css_bwidth = get_option('authorbbox_bwidth');
     $uthorbbox_css_bstyle = get_option('authorbbox_bstyle');
     $uthorbbox_css_bcolor = get_option('authorbbox_bcolor');
-    switch ($uthorbbox_css_bstyle) {
+    switch($uthorbbox_css_bstyle) {
         case "Sem borda":
             $uthorbbox_css_bstyle = "none";
             break;
@@ -193,7 +209,16 @@ function authorbbox_css_head() {
             $uthorbbox_css_bstyle = "dashed";
             break;
     }
-    if(is_single()) {
+    $author_show = get_option('authorbbox_show');
+    switch($author_show) {
+        case "posts":
+            $author_show_in = is_single();
+            break;
+        case "home":
+            $author_show_in = is_single() || is_home() || is_front_page();
+            break;
+    }
+    if($author_show_in) {
         echo "<style type=\"text/css\">
     #blog-autor {border-width:".$uthorbbox_css_bwidth."px 0 ".$uthorbbox_css_bwidth."px;border-style:$uthorbbox_css_bstyle;border-color:$uthorbbox_css_bcolor;background:$uthorbbox_css_bg;padding:10px 10px 0;margin:10px 0;}
     #blog-autor h3,p#autor-desc {margin:0 0 10px;}
@@ -290,7 +315,17 @@ function authorbbio_add_box($content) {
         <br class=\"clear\" />
     </div>
 </div>\n";
-    if(is_single()) {
+    
+    $author_show = get_option('authorbbox_show');
+    switch($author_show) {
+        case "posts":
+            $author_show_in = is_single();
+            break;
+        case "home":
+            $author_show_in = is_single() || is_home() || is_front_page();
+            break;
+    }
+    if($author_show_in) {
         return $content . $authorbbio_content;
     }
     elseif(is_page()) {

@@ -3,7 +3,7 @@ Contributors: claudiosanches, gustavo-freitas
 Tags: Social, author, bio, social
 Requires at least: 3.2
 Tested up to: 3.2.1
-Stable tag: 1.2
+Stable tag: 1.3
 
 Exiba o perfil do autor do post em baixo de todas os posts de seu blog
  
@@ -33,6 +33,9 @@ You should have received a copy of the GNU General Public License along with Aut
 Of course, visit [Author Bio Box](http://www.claudiosmweb.com/)
  
 == Changelog ==
+
+= 1.3 =
+* Adicionada op&ccedil;&atilde;o para exibir a biografia tamb&eacute;m na p&aacute;gina inicial.
 
 = 1.2 =
 * Inserido target=&quot;_blank&quot; em todos os links da descri&ccedil;&atilde;o do autor.
