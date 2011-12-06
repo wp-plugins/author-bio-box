@@ -35,7 +35,7 @@ Of course, visit [Author Bio Box](http://www.claudiosmweb.com/)
 == Changelog ==
 
 = 1.5 =
-* Melhoria na segurança do plugin evitando inserção de dados maliciosos através dos campos do menu
+* Melhoria na seguran&ccedil;a do plugin evitando inser&ccedil;&atilde;o de dados maliciosos atrav&eacute;s dos campos do menu
 
 = 1.4 =
 * Melhoria na segurança do plugin usando wp_nonce_field e check_admin_referer
