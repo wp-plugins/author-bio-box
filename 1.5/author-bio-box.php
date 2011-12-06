@@ -4,7 +4,7 @@ Plugin Name: Author Bio Box
 Plugin URI: http://www.ferramentasblog.com/2011/09/power-comment-validacao-de-comentarios.html
 Description: Exiba um box com a biografia do autor dos posts e também links de redes sociais.
 Author: Claudio Sanches
-Version: 1.4
+Version: 1.5
 Author URI: http://www.claudiosmweb.com/
 */
 
@@ -112,7 +112,7 @@ function print_authorbbox_form() {
         <tr>
             <th scope="row"><label for="authorbbox_img_op"><?php _e('Tamanho da imagem do autor'); ?></label></th>
             <td>
-                <input type="text" class="regular-text" name="authorbbox_img" id="authorbbox_img_op" value="<?php echo stripcslashes($default_img); ?>" />
+                <input type="text" class="regular-text" name="authorbbox_img" id="authorbbox_img_op" value="<?php echo strip_tags($default_img); ?>" />
                 <br /><span class="description"><?php _e('Tamanho do gravatar do autor do blog. O autor precisa ter seu e-mail cadastrado com imagem no <a href="http://pt.gravatar.com/">Gravatar.com</a> (Aprenda como configurar seu gravatar <a href="http://gfsolucoes.net/gravatar-o-que-e-como-ter-um-como-colocar-em-seu-blog/">aqui</a>.)<br />(Insira n&uacute;meros inteiros).'); ?></span>
             </td>
         </tr>
@@ -126,14 +126,14 @@ function print_authorbbox_form() {
                         jQuery("#color_abb_bg_op").click(function(){jQuery('#ilctabscolorpicker_abb_bg').slideToggle()});
                     });
                 </script>
-                <input style="width:60px;" type="text" class="regular-text" name="authorbbox_bg" id="color_abb_bg_op" value="<?php echo $default_bg; ?>" />
+                <input style="width:60px;" type="text" class="regular-text" name="authorbbox_bg" id="color_abb_bg_op" value="<?php echo strip_tags($default_bg); ?>" />
                 <div id="ilctabscolorpicker_abb_bg"></div>
             </td>
         </tr>
         <tr>
             <th scope="row"><label for="authorbbox_bwidth_op"><?php _e('Largura da borda'); ?></label></th>
             <td>
-                <input type="text" class="regular-text" name="authorbbox_bwidth" id="authorbbox_bwidth_op" value="<?php echo stripcslashes($default_bwidth); ?>" />
+                <input type="text" class="regular-text" name="authorbbox_bwidth" id="authorbbox_bwidth_op" value="<?php echo strip_tags($default_bwidth); ?>" />
                 <br /><span class="description"><?php _e('Espessura da borda superior e inferior do box<br />(Insira n&uacute;meros inteiros).'); ?></span>
             </td>
         </tr>
@@ -142,7 +142,7 @@ function print_authorbbox_form() {
             <td>
                 <select style="width:120px;" name="authorbbox_bstyle" id="authorbbox_bstyle_op">
                 <?php foreach ($default_bstyle_options as $option) { ?>
-                    <option <?php if ($default_bstyle == $option) { echo 'selected="selected"'; } ?>><?php echo $option; ?></option><?php } ?>
+                    <option <?php if ($default_bstyle == $option) { echo 'selected="selected"'; } ?>><?php echo strip_tags($option); ?></option><?php } ?>
                 </select>
             </td>
         </tr>
@@ -156,7 +156,7 @@ function print_authorbbox_form() {
                         jQuery("#color_abb_border_op").click(function(){jQuery('#ilctabscolorpicker_abb_border').slideToggle()});
                     });
                 </script>
-                <input style="width:60px;" type="text" class="regular-text" name="authorbbox_bcolor" id="color_abb_border_op" value="<?php echo $default_bcolor; ?>" />
+                <input style="width:60px;" type="text" class="regular-text" name="authorbbox_bcolor" id="color_abb_border_op" value="<?php echo strip_tags($default_bcolor); ?>" />
                 <div id="ilctabscolorpicker_abb_border"></div>
             </td>
         </tr>
