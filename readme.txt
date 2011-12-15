@@ -2,7 +2,7 @@
 Contributors: claudiosanches, gustavo-freitas
 Tags: Social, author, bio, social
 Requires at least: 3.2
-Tested up to: 3.2.1
+Tested up to: 3.3
 Stable tag: 1.5
 
 Exiba o perfil do autor do post em baixo de todas os posts de seu blog
