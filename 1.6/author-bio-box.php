@@ -4,7 +4,7 @@ Plugin Name: Author Bio Box
 Plugin URI: http://www.ferramentasblog.com/2011/09/power-comment-validacao-de-comentarios.html
 Description: Exiba um box com a biografia do autor dos posts e também links de redes sociais.
 Author: Claudio Sanches
-Version: 1.5
+Version: 1.6
 Author URI: http://www.claudiosmweb.com/
 */
 
@@ -21,6 +21,7 @@ function set_authorbbox_options() {
     add_option('authorbbox_bstyle','Solida');
     add_option('authorbbox_bcolor','#cccccc');
     add_option('authorbbox_show','posts');
+    add_option('authorbbox_function','0');
 }
 // Deleta opcoes quando o plugin &eacute; desinstalado
 function unset_authorbbox_options() {
@@ -30,6 +31,7 @@ function unset_authorbbox_options() {
     delete_option('authorbbox_bstyle');
     delete_option('authorbbox_bcolor');
     delete_option('authorbbox_show');
+    delete_option('authorbbox_function');
 }
 // instrucoes ao instalar ou desistalar o plugin
 register_activation_hook(__FILE__,'set_authorbbox_options');
@@ -83,6 +85,11 @@ function update_authorbbox_options() {
         update_option('authorbbox_show', $_REQUEST['authorbbox_show']);
         $correto = true;
     }
+    // Desativar codigo automatico
+    if ($_REQUEST['authorbbox_function']) {
+        update_option('authorbbox_function', $_REQUEST['authorbbox_function']);
+        $correto = true;
+    }
     if ($correto) {
         ?><div id="message" class="updated fade">
         <p><?php _e('Op&ccedil;&otilde;es salvas.'); ?></p>
@@ -104,6 +111,7 @@ function print_authorbbox_form() {
     $default_bstyle_options = array('Sem borda','Solida','Pontilhada','Tracejada');
     $default_bcolor = get_option('authorbbox_bcolor');
     $default_show = get_option('authorbbox_show');
+    $default_function = get_option('authorbbox_function');
     $authorbbox_plugin_dir = get_bloginfo('wpurl') . '/wp-content/plugins/author-bio-box/';
     ?>
     <form action="" method="post">
@@ -168,6 +176,15 @@ function print_authorbbox_form() {
             </td>
             </td>
         </tr>
+        <tr>
+            <th scope="row"><label for="authorbbox_function_op1"><?php _e('Inserir automáticamente o plugin no tema'); ?></label></th>
+            <td>
+                <label><input type="radio" id="authorbbox_function_op1" name="authorbbox_function" value="0" <?php if ($default_function == "0") { _e('checked="checked"'); } ?> /> <?php _e('Sim'); ?></label>
+                <label><input style="margin:0 0 0 10px" type="radio" id="authorbbox_function_op2" name="authorbbox_function" value="1" <?php if ($default_function == "1") { _e('checked="checked"'); } ?>/> <?php _e('Não'); ?></label>
+                <br /><span class="description"><?php _e('Para inserir manualmente utilize esta função: <code>&lt;?php if ( function_exists( \'authorbbio_add_authorbox\' ) ) authorbbio_add_authorbox(); ?&gt;</code>'); ?></span>
+            </td>
+            </td>
+        </tr>
     </table>
     <p class="submit">
         <?php wp_nonce_field('authorbbox_nonce_action', 'authorbbox_nonce_field'); ?>
@@ -192,36 +209,33 @@ function authorbbox_color() {
 add_action('admin_menu', 'authorbbox_color');
 // JS e CSS do plugin no head
 function authorbbox_css_head() {
-    $uthorbbox_css_bg = get_option('authorbbox_bg');
-    $uthorbbox_css_bwidth = get_option('authorbbox_bwidth');
     $uthorbbox_css_bstyle = get_option('authorbbox_bstyle');
-    $uthorbbox_css_bcolor = get_option('authorbbox_bcolor');
     switch($uthorbbox_css_bstyle) {
-        case "Sem borda":
-            $uthorbbox_css_bstyle = "none";
+        case 'Sem borda':
+            $uthorbbox_css_bstyle = 'none';
             break;
-        case "Solida":
-            $uthorbbox_css_bstyle = "solid";
+        case 'Solida':
+            $uthorbbox_css_bstyle = 'solid';
             break;
-        case "Pontilhada":
-            $uthorbbox_css_bstyle = "dotted";
+        case 'Pontilhada':
+            $uthorbbox_css_bstyle = 'dotted';
             break;
-        case "Tracejada":
-            $uthorbbox_css_bstyle = "dashed";
+        case 'Tracejada':
+            $uthorbbox_css_bstyle = 'dashed';
             break;
     }
     $author_show = get_option('authorbbox_show');
     switch($author_show) {
-        case "posts":
+        case 'posts':
             $author_show_in = is_single();
             break;
-        case "home":
+        case 'home':
             $author_show_in = is_single() || is_home() || is_front_page();
             break;
     }
     if($author_show_in) {
-        echo "<style type=\"text/css\">
-    #blog-autor {border-width:".$uthorbbox_css_bwidth."px 0 ".$uthorbbox_css_bwidth."px;border-style:$uthorbbox_css_bstyle;border-color:$uthorbbox_css_bcolor;background:$uthorbbox_css_bg;padding:10px 10px 0;margin:10px 0;}
+        echo '<style type="text/css">
+    #blog-autor {border-width:'.get_option('authorbbox_bwidth').'px 0 '.get_option('authorbbox_bwidth').'px;border-style:'.$uthorbbox_css_bstyle.';border-color:'.get_option('authorbbox_bcolor').';background:'.get_option('authorbbox_bg').';padding:10px 10px 0;margin:10px 0;}
     #blog-autor h3,p#autor-desc {margin:0 0 10px;}
     #blog-autor a img {background:none;padding:0;margin:0 3px 0 0;border:none;opacity:1;transition:all 0.4s ease;-webkit-transition:all 0.4s ease;-o-transition:all 0.4s ease;-moz-transition:all 0.4s ease;}
     #blog-autor a:hover img {background:none;padding:0;border:none;opacity:0.7;}
@@ -230,7 +244,8 @@ function authorbbox_css_head() {
     p#autor-social {margin:0 0 5px;}
     p#autor-footer {margin:0;padding:0;}
     .clear {clear:both;}
-</style>\n";
+</style>
+';
     }
 }
 add_filter('wp_head', 'authorbbox_css_head');
@@ -249,80 +264,63 @@ add_filter('user_contactmethods','authorbbio_contact_edt',10,1);
 // Mostra facebook se existir link
 function authorbbio_add_facebook() {
     $authorbbio_facebook = get_the_author_meta('facebook');
-    $authorbbio_plugin_url = get_bloginfo('wpurl') . '/wp-content/plugins/author-bio-box/facebook.png';
-    if($authorbbio_facebook == "" || $authorbbio_facebook == null) {
+    if($authorbbio_facebook == '' || $authorbbio_facebook == null) {
         return null;
     }
     else {
-        return "<a target=\"_blank\" href=\"$authorbbio_facebook\"><img src=\"$authorbbio_plugin_url\" alt=\"facebook\" /></a>";
+        return '<a target="_blank" href="'. $authorbbio_facebook .'"><img src="'. get_bloginfo('wpurl') .'/wp-content/plugins/author-bio-box/facebook.png" alt="facebook" /></a>';
     }
 }
 // Mostra twitter se existir link
 function authorbbio_add_twitter() {
     $authorbbio_twitter = get_the_author_meta('twitter');
-    $authorbbio_plugin_url = get_bloginfo('wpurl') . '/wp-content/plugins/author-bio-box/twitter.png';
-    if($authorbbio_twitter == "" || $authorbbio_twitter == null) {
+    if($authorbbio_twitter == '' || $authorbbio_twitter == null) {
         return null;
     }
     else {
-        return "<a target=\"_blank\" href=\"$authorbbio_twitter\"><img src=\"$authorbbio_plugin_url\" alt=\"twitter\" /></a>";
+        return '<a target="_blank" href="'. $authorbbio_twitter .'"><img src="'. get_bloginfo('wpurl') .'/wp-content/plugins/author-bio-box/twitter.png" alt="twitter" /></a>';
     }
 }
 // Mostra google plus se existir link
 function authorbbio_add_googleplus() {
     $authorbbio_googleplus = get_the_author_meta('googleplus');
-    $authorbbio_plugin_url = get_bloginfo('wpurl') . '/wp-content/plugins/author-bio-box/google-plus.png';
-    $authorbbio_linkedin = get_the_author_meta('linkedin');
-    if($authorbbio_googleplus == "" || $authorbbio_googleplus == null) {
+    if($authorbbio_googleplus == '' || $authorbbio_googleplus == null) {
         return null;
     }
     else {
-        return "<a target=\"_blank\" href=\"$authorbbio_googleplus\"><img src=\"$authorbbio_plugin_url\" alt=\"google plus\" /></a>";
+        return '<a target="_blank" href="'. $authorbbio_googleplus .'"><img src="'. get_bloginfo('wpurl') .'/wp-content/plugins/author-bio-box/google-plus.png" alt="google plus" /></a>';
     }
 }
 // Mostra linkedin se existir link
 function authorbbio_add_linkedin() {
     $authorbbio_linkedin = get_the_author_meta('linkedin');
-    $authorbbio_plugin_url = get_bloginfo('wpurl') . '/wp-content/plugins/author-bio-box/linkedin.png';
     if($authorbbio_linkedin == "" || $authorbbio_linkedin == null) {
         return null;
     }
     else {
-        return "<a target=\"_blank\" href=\"$authorbbio_linkedin\"><img src=\"$authorbbio_plugin_url\" alt=\"linkedin\" /></a>";
+        return '<a target="_blank" href="'. $authorbbio_linkedin .'"><img src="'. get_bloginfo('wpurl') .'/wp-content/plugins/author-bio-box/linkedin.png" alt="linkedin" /></a>';
     }
 }
 // Adiciona Author Bio Box
 function authorbbio_add_box($content) {
-    $authorbbio_imgsize = get_option('authorbbox_img');
-    $authorbbio_name = get_the_author_meta('display_name');
-    $authorbbio_posts = get_the_author_posts();
-    $authorbbio_desc = get_the_author_meta('description');
-    $authorbbio_desc_final = str_replace('<a href=', '<a target="_blank" href=', $authorbbio_desc);
-    $authorbbio_blog_url = get_bloginfo('url');
-    $authorbbio_id = get_the_author_meta('ID');
-    $authorbbio_img = get_avatar($authorbbio_id, $authorbbio_imgsize);
-    $authorbbio_info_facebook = authorbbio_add_facebook();
-    $authorbbio_info_twitter = authorbbio_add_twitter();
-    $authorbbio_info_googleplus = authorbbio_add_googleplus();
-    $authorbbio_info_linkedin = authorbbio_add_linkedin();
-    $authorbbio_content = "
-<div id=\"blog-autor\">
-    <div id=\"autor-bio\">
-        <h3>$authorbbio_name</h3>
-        <div id=\"autor-gravatar\">$authorbbio_img</div>
-        <p id=\"autor-social\">$authorbbio_info_facebook $authorbbio_info_twitter $authorbbio_info_googleplus $authorbbio_info_linkedin</p>
-        <p id=\"autor-desc\">$authorbbio_desc_final</p>
-        <p id=\"autor-footer\"><a href=\"$authorbbio_blog_url/?author=$authorbbio_id\">$authorbbio_name</a> j&aacute; escreveu $authorbbio_posts posts.</p>
-        <br class=\"clear\" />
+    $authorbbio_content = '
+<div id="blog-autor">
+    <div id="autor-bio">
+        <h3>'. get_the_author_meta('display_name') .'</h3>
+        <div id="autor-gravatar">'. get_avatar(get_the_author_meta('ID'), get_option('authorbbox_img')) .'</div>
+        <p id="autor-social">'. authorbbio_add_facebook() . authorbbio_add_twitter() . authorbbio_add_googleplus() . authorbbio_add_linkedin() .'</p>
+        <p id="autor-desc">'. str_replace('<a href=', '<a target="_blank" href=', get_the_author_meta('description')) .'</p>
+        <p id="autor-footer"><a href="'. get_bloginfo('url') .'/?author='. get_the_author_meta('ID') .'">'. get_the_author_meta('display_name') .'</a> j&aacute; escreveu '. get_the_author_posts() .' posts.</p>
+        <br class="clear" />
     </div>
-</div>\n";
-    
+</div>
+';
     $author_show = get_option('authorbbox_show');
     switch($author_show) {
-        case "posts":
+        case 'posts':
             $author_show_in = is_single();
             break;
-        case "home":
+        case 'home':
             $author_show_in = is_single() || is_home() || is_front_page();
             break;
     }
@@ -336,5 +334,22 @@ function authorbbio_add_box($content) {
         return $content;
     }
 }
-add_filter('the_content', 'authorbbio_add_box', 1300);
+if(get_option('authorbbox_function') == 0){
+    add_filter('the_content', 'authorbbio_add_box', 1300);
+}
+// Adiciona Author Bio Box manualmente
+function authorbbio_add_authorbox() {
+    echo '
+<div id="blog-autor">
+    <div id="autor-bio">
+        <h3>'. get_the_author_meta('display_name') .'</h3>
+        <div id="autor-gravatar">'. get_avatar(get_the_author_meta('ID'), get_option('authorbbox_img')) .'</div>
+        <p id="autor-social">'. authorbbio_add_facebook() . authorbbio_add_twitter() . authorbbio_add_googleplus() . authorbbio_add_linkedin() .'</p>
+        <p id="autor-desc">'. str_replace('<a href=', '<a target="_blank" href=', get_the_author_meta('description')) .'</p>
+        <p id="autor-footer"><a href="'. get_bloginfo('url') .'/?author='. get_the_author_meta('ID') .'">'. get_the_author_meta('display_name') .'</a> j&aacute; escreveu '. get_the_author_posts() .' posts.</p>
+        <br class="clear" />
+    </div>
+</div>
+';
+}
 ?>
