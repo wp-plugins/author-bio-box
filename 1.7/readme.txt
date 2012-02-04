@@ -2,8 +2,8 @@
 Contributors: claudiosanches, gustavo-freitas
 Tags: Social, author, bio, social
 Requires at least: 3.2
-Tested up to: 3.3
-Stable tag: 1.6
+Tested up to: 3.3.1
+Stable tag: 1.7
 
 Exiba o perfil do autor do post em baixo de todas os posts de seu blog
  
@@ -34,7 +34,10 @@ Of course, visit [Author Bio Box](http://www.claudiosmweb.com/)
  
 == Changelog ==
 
-= 1.6 =
+= 1.7 =
+* Corrigido o bug da opção de desativar a inserção automática do plugin
+
+= 1.6 =automatica 
 * Melhoria na performance
 * Adicionada opção para inserir manualmente o plugin no tema
 

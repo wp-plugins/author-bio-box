@@ -4,7 +4,7 @@ Plugin Name: Author Bio Box
 Plugin URI: http://www.ferramentasblog.com/2011/09/power-comment-validacao-de-comentarios.html
 Description: Exiba um box com a biografia do autor dos posts e também links de redes sociais.
 Author: Claudio Sanches
-Version: 1.6
+Version: 1.7
 Author URI: http://www.claudiosmweb.com/
 */
 
@@ -21,7 +21,7 @@ function set_authorbbox_options() {
     add_option('authorbbox_bstyle','Solida');
     add_option('authorbbox_bcolor','#cccccc');
     add_option('authorbbox_show','posts');
-    add_option('authorbbox_function','0');
+    add_option('authorbbox_function','1');
 }
 // Deleta opcoes quando o plugin &eacute; desinstalado
 function unset_authorbbox_options() {
@@ -171,16 +171,16 @@ function print_authorbbox_form() {
         <tr>
             <th scope="row"><label for="authorbbox_show_op1"><?php _e('Mostrar plugin em'); ?></label></th>
             <td>
-                <label><input type="radio" id="authorbbox_show_op1" name="authorbbox_show" value="posts" <?php if ($default_show == "posts") { _e('checked="checked"'); } ?> /> <?php _e('Apenas dentro dos Posts'); ?></label>
-                <label><input style="margin:0 0 0 10px" type="radio" id="authorbbox_show_op2" name="authorbbox_show" value="home" <?php if ($default_show == "home") { _e('checked="checked"'); } ?>/> <?php _e('Na p&aacute;gina inicial e posts'); ?></label>
+                <label><input type="radio" id="authorbbox_show_op1" name="authorbbox_show" value="posts" <?php if ($default_show == 'posts') { _e('checked="checked"'); } ?> /> <?php _e('Apenas dentro dos Posts'); ?></label>
+                <label><input style="margin:0 0 0 10px" type="radio" id="authorbbox_show_op2" name="authorbbox_show" value="home" <?php if ($default_show == 'home') { _e('checked="checked"'); } ?>/> <?php _e('Na p&aacute;gina inicial e posts'); ?></label>
             </td>
             </td>
         </tr>
         <tr>
             <th scope="row"><label for="authorbbox_function_op1"><?php _e('Inserir automáticamente o plugin no tema'); ?></label></th>
             <td>
-                <label><input type="radio" id="authorbbox_function_op1" name="authorbbox_function" value="0" <?php if ($default_function == "0") { _e('checked="checked"'); } ?> /> <?php _e('Sim'); ?></label>
-                <label><input style="margin:0 0 0 10px" type="radio" id="authorbbox_function_op2" name="authorbbox_function" value="1" <?php if ($default_function == "1") { _e('checked="checked"'); } ?>/> <?php _e('Não'); ?></label>
+                <label><input type="radio" id="authorbbox_function_op1" name="authorbbox_function" value="1" <?php if ($default_function == '1') { _e('checked="checked"'); } ?> /> <?php _e('Sim'); ?></label>
+                <label><input style="margin:0 0 0 10px" type="radio" id="authorbbox_function_op2" name="authorbbox_function" value="2" <?php if ($default_function == '2') { _e('checked="checked"'); } ?>/> <?php _e('Não'); ?></label>
                 <br /><span class="description"><?php _e('Para inserir manualmente utilize esta função: <code>&lt;?php if ( function_exists( \'authorbbio_add_authorbox\' ) ) authorbbio_add_authorbox(); ?&gt;</code>'); ?></span>
             </td>
             </td>
@@ -334,7 +334,7 @@ function authorbbio_add_box($content) {
         return $content;
     }
 }
-if(get_option('authorbbox_function') == 0){
+if(get_option('authorbbox_function') == '1'){
     add_filter('the_content', 'authorbbio_add_box', 1300);
 }
 // Adiciona Author Bio Box manualmente
