@@ -172,7 +172,7 @@ class Author_Bio_Box_Admin {
 	/**
 	 * Custom contact methods.
 	 *
-	 * @since  3.0.0
+	 * @since  3.2.0
 	 *
 	 * @param  array $methods Old contact methods.
 	 *
@@ -184,6 +184,10 @@ class Author_Bio_Box_Admin {
 		$methods['twitter']    = __( 'Twitter', $this->plugin_slug );
 		$methods['googleplus'] = __( 'Google Plus', $this->plugin_slug );
 		$methods['linkedin']   = __( 'LinkedIn', $this->plugin_slug );
+		$methods['flickr']     = __( 'Flickr', $this->plugin_slug );
+		$methods['tumblr']     = __( 'Tumblr', $this->plugin_slug );
+		$methods['vimeo']      = __( 'Vimeo', $this->plugin_slug );
+		$methods['youtube']    = __( 'YouTube', $this->plugin_slug );
 
 		// Remove old methods.
 		unset( $methods['aim'] );

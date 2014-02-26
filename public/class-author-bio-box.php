@@ -262,8 +262,8 @@ class Author_Bio_Box {
 		$domain = self::get_plugin_slug();
 		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
 
-        load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
-        load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
+		load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
+		load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
 	}
 
 	/**
@@ -304,7 +304,7 @@ class Author_Bio_Box {
 	/**
 	 * HTML of the box.
 	 *
-	 * @since  3.0.0
+	 * @since  3.2.0
 	 *
 	 * @param  array $settings Author Bio Box settings.
 	 *
@@ -319,13 +319,17 @@ class Author_Bio_Box {
 		$gravatar = ! empty( $settings['gravatar'] ) ? $settings['gravatar'] : 70;
 
 		// Set the social icons
-		$social = array(
+		$social = apply_filters( 'authorbiobox_social_data', array(
 			'website'    => get_the_author_meta( 'user_url' ),
 			'facebook'   => get_the_author_meta( 'facebook' ),
 			'twitter'    => get_the_author_meta( 'twitter' ),
 			'googleplus' => get_the_author_meta( 'googleplus' ),
-			'linkedin'   => get_the_author_meta( 'linkedin' )
-		);
+			'linkedin'   => get_the_author_meta( 'linkedin' ),
+			'flickr'	 => get_the_author_meta( 'flickr' ),
+			'tumblr'	 => get_the_author_meta( 'tumblr' ),
+			'vimeo'		 => get_the_author_meta( 'vimeo' ),
+			'youtube'	 => get_the_author_meta( 'youtube' )
+		) );
 
 		// Set the styes.
 		$styles = sprintf(
